@@ -1,8 +1,12 @@
 import 'dart:typed_data';
 
+import 'package:dart_eval/dart_eval_bridge.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:pdf/pdf.dart';
-import 'package:pdf/widgets.dart' as pd;
+import 'package:pdf/widgets.dart' as pw;
+import 'package:pdf_eval/data.dart';
+import 'package:pdf_eval/pdf_eval.dart';
 import 'package:printing/printing.dart';
 
 void main() {
@@ -27,20 +31,31 @@ class MyApp extends StatelessWidget {
         ),
         body: PdfPreview(
           build: _buildPdf,
+          // build: _buildEvcPdf,
         ),
       ),
     );
   }
 
   Future<Uint8List> _buildPdf(PdfPageFormat format) async {
-    final pdf = pd.Document(version: PdfVersion.pdf_1_5, compress: true)
+    final pdf = pw.Document(version: PdfVersion.pdf_1_5, compress: true)
       ..addPage(
-        pd.Page(
+        pw.Page(
           build: (pdContext) {
-            return pd.Text("Sample Pdf");
+            return pw.Text("Sample");
           },
         ),
       );
     return pdf.save();
   }
+
+  // Future<Uint8List> _buildEvcPdf(PdfPageFormat format) async {
+  //   WidgetsFlutterBinding.ensureInitialized();
+  //   final program = await rootBundle.load('assets/scripts/testorg.evc');
+  //   final runtime = Runtime(program);
+  //   runtime.addPlugin(pdfEvalPlugin);
+  //   runtime.loadGlobalOverrides();
+  //   final pdf = runtimeOverride("#testorg_sale_a4", [$SaleData.wrap(saleData)]);
+  //   return (pdf as pw.Document).save();
+  // }
 }
